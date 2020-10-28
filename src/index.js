@@ -1,11 +1,29 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUndo } from "@fortawesome/free-solid-svg-icons";
 
 class Square extends React.Component {
+  cssMatrix = [
+    { borderRight: "solid", borderBottom: "solid" }, // top-left
+    { borderBottom: "solid" }, // top-mid
+    { borderLeft: "solid", borderBottom: "solid" }, // top-right
+    { borderRight: "solid", borderBottom: "solid" }, // mid-left
+    { borderBottom: "solid" }, // mid-mid
+    { borderLeft: "solid", borderBottom: "solid" }, // mid-right
+    { borderRight: "solid" }, // bottom-left
+    {},
+    { borderLeft: "solid" }, // bottom-mid
+  ];
+
   render() {
     return (
-      <button className="square" onClick={this.props.onClick}>
+      <button
+        className="square"
+        onClick={this.props.onClick}
+        // style={this.cssMatrix[this.props.pos]}
+      >
         {this.props.value}
       </button>
     );
@@ -18,6 +36,7 @@ class Board extends React.Component {
       <Square
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
+        pos={i}
       />
     );
   }
@@ -54,13 +73,14 @@ class Game extends React.Component {
           squares: Array(9).fill(null),
         },
       ],
+      stepNumber: 0,
       xIsNext: true,
     };
   }
 
   handleClick = (i) => {
     const history = this.state.history;
-    const squares = history[history.length - 1].squares.slice();
+    const squares = history[this.state.stepNumber].squares.slice();
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
@@ -72,6 +92,28 @@ class Game extends React.Component {
         },
       ]),
       xIsNext: !this.state.xIsNext,
+      stepNumber: this.state.stepNumber + 1,
+    });
+  };
+
+  jumpTo = (i) => {
+    const history = this.state.history;
+    const newHistroy = history.slice(0, i + 1);
+    this.setState({
+      history: newHistroy,
+      stepNumber: i,
+      xIsNext: i % 2 === 0,
+    });
+  };
+
+  handleUndo = () => {
+    const history = this.state.history;
+    const stepNumber = this.state.stepNumber;
+    const newHistroy = history.slice(0, stepNumber);
+    this.setState({
+      history: newHistroy,
+      stepNumber: stepNumber - 1,
+      xIsNext: (stepNumber - 1) % 2 === 0,
     });
   };
 
@@ -86,6 +128,16 @@ class Game extends React.Component {
       status = "Next player: " + (this.state.xIsNext ? "X" : "O");
     }
 
+    const moves = history.map((squares, index) => {
+      const desc = index ? `Go to move #${index}` : `Go to start`;
+
+      return (
+        <li key={index}>
+          <button onClick={() => this.jumpTo(index)}>{desc}</button>
+        </li>
+      );
+    });
+
     return (
       <div className="game">
         <div className="game-board">
@@ -96,8 +148,14 @@ class Game extends React.Component {
           />
         </div>
         <div className="game-info">
-          <div>{/* status */}</div>
-          <ol>{/* TODO */}</ol>
+          <FontAwesomeIcon
+            icon={faUndo}
+            style={{ display: this.state.stepNumber === 0 ? "none" : "inline" }}
+            onClick={this.handleUndo}
+          ></FontAwesomeIcon>
+          {/* <button>Undo</button> */}
+          {/* <div>status</div>
+          <ol>{moves}</ol> */}
         </div>
       </div>
     );

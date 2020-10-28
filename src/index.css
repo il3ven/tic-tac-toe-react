@@ -8,6 +8,14 @@ ul {
   padding-left: 30px;
 }
 
+.board-row:nth-child(1) {
+  border-bottom: 4px solid;
+}
+
+.board-row:nth-child(2) {
+  border-bottom: 4px solid;
+}
+
 .board-row:after {
   clear: both;
   content: "";
@@ -15,22 +23,31 @@ ul {
 }
 
 .status {
+  font-size: 24px;
+  text-align: center;
   margin-bottom: 10px;
 }
 
 .square {
   background: #fff;
-  border: 1px solid #999;
+  border: none;
   float: left;
-  font-size: 24px;
+  font-size: 32px;
   font-weight: bold;
   line-height: 34px;
-  height: 34px;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
-  width: 34px;
+  min-height: 60px;
+  min-width: 60px;
+}
+.square:nth-child(1) {
+  border-right: 4px solid;
+}
+
+.square:nth-child(2) {
+  border-right: 4px solid;
 }
 
 .square:focus {
@@ -43,9 +60,18 @@ ul {
 
 .game {
   display: flex;
-  flex-direction: row;
+  min-width: 300px;
+  vertical-align: middle;
+  flex-direction: column;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.game-board {
+  margin: 0 auto;
 }
 
 .game-info {
   margin-left: 20px;
+  margin: 0 auto;
 }
