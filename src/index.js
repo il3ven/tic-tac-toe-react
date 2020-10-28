@@ -140,6 +140,8 @@ class Game extends React.Component {
 
     return (
       <div className="game">
+        <h1>Tic Tac Toe Game</h1>
+        <hr className="line"></hr>
         <div className="game-board">
           <div className="status">{status}</div>
           <Board
@@ -148,11 +150,19 @@ class Game extends React.Component {
           />
         </div>
         <div className="game-info">
-          <FontAwesomeIcon
-            icon={faUndo}
-            style={{ display: this.state.stepNumber === 0 ? "none" : "inline" }}
+          <button
+            id="undo"
+            style={{
+              display: this.state.stepNumber === 0 ? "none" : "inline",
+            }}
             onClick={this.handleUndo}
-          ></FontAwesomeIcon>
+          >
+            <FontAwesomeIcon
+              icon={faUndo}
+              style={{ marginRight: "5px" }}
+            ></FontAwesomeIcon>
+            Undo
+          </button>
           {/* <button>Undo</button> */}
           {/* <div>status</div>
           <ol>{moves}</ol> */}
